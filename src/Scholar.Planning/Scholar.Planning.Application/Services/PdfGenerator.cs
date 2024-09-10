@@ -1,21 +1,28 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Scholar.Planning.Domain.Dtos;
 using Scholar.Planning.Domain.Services;
 
 namespace Scholar.Planning.Application.Services;
 
 public class PdfGenerator : IPdfGenerator
 {
+    private static readonly Font BoldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
+    private static readonly Font RegularFont = FontFactory.GetFont(FontFactory.HELVETICA, 12);
+    private static readonly Font SmallFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
+
     public byte[] GenerateFile()
     {
         using var ms = new MemoryStream();
-        var doc = new Document(PageSize.A4, 50, 50, 25, 25);
+        var doc = new Document(PageSize.A3, 50, 50, 25, 25);
         var writer = PdfWriter.GetInstance(doc, ms);
 
         doc.Open();
 
         CreateHeader(doc);
         CreateSubHeader(doc);
+        CreateSection1(doc);
+        CreateSection2(doc);
 
         doc.Close();
         writer.Close();
@@ -29,7 +36,7 @@ public class PdfGenerator : IPdfGenerator
         {
             WidthPercentage = 100
         };
-        table.SetWidths(new float[] { 1, 2, 2 });
+        table.SetWidths([1f, 2f, 2f]);
 
         var img = Image.GetInstance("./Resources/logo.jpg");
         img.ScaleAbsolute(65.205f, 65.205f);
@@ -40,15 +47,14 @@ public class PdfGenerator : IPdfGenerator
         };
         table.AddCell(imageCell);
 
-        var font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 7);
         var text = new Phrase
         {
-            new Chunk("Escola Municipal de Educação Infantil Parque do Sabiá", font), // Primeira linha
-            new Chunk("\nRua Gavião, 89 - CEP 93295-605", font), // Segunda linha
-            new Chunk("\nBairro Três Marias – Esteio/RS", font), // Terceira linha
-            new Chunk("\nFone: (51) 2312-7272 - Celular: (51) 995190107", font) // Quarta linha
+            new Chunk("Escola Municipal de Educação Infantil Parque do Sabiá", SmallFont),
+            new Chunk("\nRua Gavião, 89 - CEP 93295-605", SmallFont),
+            new Chunk("\nBairro Três Marias – Esteio/RS", SmallFont),
+            new Chunk("\nFone: (51) 2312-7272 - Celular: (51) 995190107", SmallFont)
         };
-        
+
         foreach (var chunk in text.Chunks)
         {
             chunk.setLineHeight(10f);
@@ -63,7 +69,7 @@ public class PdfGenerator : IPdfGenerator
         table.AddCell(textCell);
 
         var img2 = Image.GetInstance("./Resources/state-info.jpg");
-        img2.ScaleAbsolute(184.1425f, 38.865f);
+        img2.ScaleAbsolute(200.1425f, 48.865f);
         var imageCell2 = new PdfPCell(img2)
         {
             Border = Rectangle.NO_BORDER,
@@ -77,9 +83,6 @@ public class PdfGenerator : IPdfGenerator
 
     private static void CreateSubHeader(IElementListener doc)
     {
-        var boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
-        var regularFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
-
         var table = new PdfPTable(2)
         {
             WidthPercentage = 100
@@ -93,8 +96,8 @@ public class PdfGenerator : IPdfGenerator
             Colspan = 2,
             Phrase =
             [
-                new Chunk("1. PROFESSORA: ", boldFont),
-                new Chunk("Marli Isotton", regularFont)
+                new Chunk("1. Professora: ", BoldFont),
+                new Chunk("Marli Isotton", RegularFont)
             ]
         };
         table.AddCell(cell1);
@@ -105,8 +108,8 @@ public class PdfGenerator : IPdfGenerator
             Padding = 5,
             Phrase =
             [
-                new Chunk("2. TURMA: ", boldFont),
-                new Chunk("BERÇÁRIO I", regularFont)
+                new Chunk("2. Turma: ", BoldFont),
+                new Chunk("Berçário I", RegularFont)
             ]
         };
         table.AddCell(cell2);
@@ -118,8 +121,8 @@ public class PdfGenerator : IPdfGenerator
             HorizontalAlignment = Element.ALIGN_LEFT,
             Phrase =
             [
-                new Chunk("TURNO: ", boldFont),
-                new Chunk("Tarde", regularFont)
+                new Chunk("Turno: ", BoldFont),
+                new Chunk("Tarde", RegularFont)
             ]
         };
         table.AddCell(cell3);
@@ -131,16 +134,199 @@ public class PdfGenerator : IPdfGenerator
             Colspan = 2,
             Phrase =
             [
-                new Chunk("3. PERÍODO: ", boldFont),
-                //Valor dinamico
-                new Chunk("13H às 19H - 06 a 11 de setembro", regularFont)
+                new Chunk("3. Período: ", BoldFont),
+                //Valor dinamico ajustar
+                new Chunk("13H às 19H - 06 a 11 de setembro", RegularFont)
             ]
         };
         table.AddCell(cell4);
+        doc.Add(table);
+        doc.Add(SpaceParagraph());
+    }
+
+    private static void CreateSection1(IElementListener doc)
+    {
+        var table = new PdfPTable(4)
+        {
+            WidthPercentage = 100
+        };
+        table.SetWidths([1f, 1f, 1f, 1f]);
+
+        var cell1 = new PdfPCell
+        {
+            Border = Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER | Rectangle.RIGHT_BORDER,
+            PaddingTop = 10,
+            Colspan = 4,
+            HorizontalAlignment = Element.ALIGN_CENTER,
+            Phrase =
+            [
+                new Paragraph("Registros planejamento anterior", BoldFont)
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 10f,
+                }
+            ]
+        };
+        table.AddCell(cell1);
+
+        var cell2 = new PdfPCell
+        {
+            Border = Rectangle.LEFT_BORDER | Rectangle.RIGHT_BORDER,
+            Padding = 10,
+            PaddingBottom = 30,
+            Colspan = 4,
+            HorizontalAlignment = Element.ALIGN_JUSTIFIED,
+            VerticalAlignment = Element.ALIGN_JUSTIFIED,
+            Phrase =
+            [
+                new Paragraph(Mock.BigExample, RegularFont)
+            ]
+        };
+        table.AddCell(cell2);
+
+        //dinamico
+        var photos = new[] { "foto", "foto", "foto", "foto", "foto", "foto", "foto", "foto" };
+
+        AddImages(photos, table);
 
         doc.Add(table);
+        doc.Add(SpaceParagraph());
     }
-    
+
+    private static void CreateSection2(IElementListener doc)
+    {
+        var table = new PdfPTable(1)
+        {
+            WidthPercentage = 100
+        };
+        table.SetWidths([1f]);
+
+        var cell1 = TitleCell("Intencionalidade Pedagógica");
+        table.AddCell(cell1);
+
+        var cell2 = ContentCell(Mock.MiddleExample);
+        table.AddCell(cell2);
+
+        var cell3 = TitleCell("Metodologia de aprendizagem");
+        table.AddCell(cell3);
+
+        var cell4 = ContentCell(Mock.MiddleExample);
+        table.AddCell(cell4);
+
+        var cell5 = TitleCell("Rotina");
+        table.AddCell(cell5);
+
+        //dinamico
+        var items = new List<KeyValueDto<string, string>>
+        {
+            new() { Key = "13h às 19h", Value = Mock.SmallExample },
+            new() { Key = "13h 30 min", Value = Mock.SmallExample },
+            new() { Key = "Momento higiene", Value = Mock.SmallExample },
+            new() { Key = "14h Momento do soninho", Value = Mock.SmallExample },
+            new() { Key = "Atividade pedagógica", Value = Mock.SmallExample },
+            new() { Key = "Momento Livre", Value = Mock.SmallExample },
+            new() { Key = "16h Hora da fruta", Value = Mock.SmallExample },
+            new() { Key = "Momento higiene", Value = Mock.SmallExample },
+            new() { Key = "Momento do soninho", Value = Mock.SmallExample }
+        };
+        
+        CreateTableWithUnorderedList(table, items);
+
+        doc.Add(table);
+        doc.Add(SpaceParagraph());
+    }
+
+    private static PdfPCell ContentCell(string content)
+    {
+        return new PdfPCell
+        {
+            Border = Rectangle.LEFT_BORDER | Rectangle.RIGHT_BORDER,
+            Padding = 10,
+            HorizontalAlignment = Element.ALIGN_JUSTIFIED,
+            VerticalAlignment = Element.ALIGN_JUSTIFIED,
+            Phrase =
+            [
+                new Paragraph(content, RegularFont)
+            ]
+        };
+    }
+
+    private static PdfPCell TitleCell(string title)
+    {
+        return new PdfPCell
+        {
+            Border = Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER | Rectangle.RIGHT_BORDER,
+            PaddingTop = 10,
+            PaddingBottom = 5,
+            HorizontalAlignment = Element.ALIGN_CENTER,
+            Phrase =
+            [
+                new Paragraph(title, BoldFont)
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 10f,
+                }
+            ]
+        };
+    }
+
+    private static void AddImages(IReadOnlyCollection<string> images, PdfPTable table)
+    {
+        var count = 0;
+        for (var i = 0; i < images.Count; i++)
+        {
+            var border = count switch
+            {
+                0 => Rectangle.LEFT_BORDER,
+                3 => Rectangle.RIGHT_BORDER,
+                _ => Rectangle.NO_BORDER
+            };
+
+            if (i >= images.Count - 4)
+                border |= Rectangle.BOTTOM_BORDER;
+
+            var img = Image.GetInstance("./Resources/img1.png");
+            img.ScaleAbsolute(170.205f, 170.205f);
+            var imageCell = new PdfPCell(img)
+            {
+                Border = border,
+                Padding = 2,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                VerticalAlignment = Element.ALIGN_CENTER,
+            };
+
+            table.AddCell(imageCell);
+
+            if (count is 3)
+                count = 0;
+            else
+                count++;
+        }
+    }
+
+    private static void CreateTableWithUnorderedList(PdfPTable table, IEnumerable<KeyValueDto<string, string>> items)
+    {
+        var list = new List(List.UNORDERED);
+        list.SetListSymbol("\u2022 ");
+
+        foreach (var listItem in items.Select(item => new ListItem
+                 {
+                     new Chunk(item.Key + ": ", BoldFont),
+                     new Chunk(item.Value, RegularFont)
+                 }))
+        {
+            list.Add(listItem);
+        }
+
+        var cell = new PdfPCell
+        {
+            Border = Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER,
+            Padding = 5
+        };
+        cell.AddElement(list);
+        table.AddCell(cell);
+    }
+
     private static Paragraph SpaceParagraph()
     {
         return new Paragraph
@@ -148,59 +334,4 @@ public class PdfGenerator : IPdfGenerator
             SpacingBefore = 20f
         };
     }
-
-    // // Cria o documento e define o tamanho da página
-    //     var doc = new Document(PageSize.A4, 50, 50, 25, 25);
-    //     
-    //     // Cria o writer que vai salvar o PDF
-    //     var writer = PdfWriter.GetInstance(doc, new FileStream("test.pdf", FileMode.Create));
-    //
-    //     // Abre o documento para edição
-    //     doc.Open();
-    //
-    //     // Adicionando o título do documento
-    //     var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
-    //     var title = new Paragraph("Escola Municipal de Educação Infantil Parque do Sabiá", titleFont)
-    //         {
-    //             Alignment = Element.ALIGN_CENTER
-    //         };
-    //     doc.Add(title);
-    //
-    //     // Adicionando endereço
-    //     var regularFont = FontFactory.GetFont(FontFactory.HELVETICA, 12);
-    //     var address = new Paragraph("Rua Gavião, 89 - CEP 93295-605\nBairro Três Marias – Esteio/RS\nFone: (51) 2312-7272- Celular: (51) 995190107", regularFont)
-    //         {
-    //             Alignment = Element.ALIGN_CENTER
-    //         };
-    //     doc.Add(address);
-    //
-    //     // Adicionando detalhes da turma
-    //     doc.Add(new Paragraph("\nPROFESSORA: Marli Isotton\nTURMA: BERÇÁRIO I  TURNO: Tarde\nPERÍODO: 13H às 19H      06 a 11 de setembro", regularFont));
-    //
-    //     // Adicionando conteúdo principal
-    //     doc.Add(new Paragraph("\nRegistros planejamento anterior:", regularFont));
-    //     doc.Add(new Paragraph("As atividades foram feitas na sala de aula... (conteúdo completo aqui)", regularFont));
-    //
-    //     // Adicionando tabelas (exemplo)
-    //     var table = new PdfPTable(2)
-    //     {
-    //         WidthPercentage = 100
-    //     }; // Cria uma tabela com 2 colunas
-    //     table.AddCell("DATA");
-    //     table.AddCell("ATIVIDADES");
-    //
-    //     table.AddCell("06/09/2024");
-    //     table.AddCell("Primeiro momento: Acolhida com a música...");
-    //
-    //     table.AddCell("09/09/2024");
-    //     table.AddCell("Primeiro momento: Acolhida com a música...");
-    //
-    //     doc.Add(table);
-    //
-    //     // Adicionando notas finais
-    //     doc.Add(new Paragraph("\nObservação: A rotina descrita acima pode ser alterada...", regularFont));
-    //
-    //     // Fecha o documento
-    //     doc.Close();
-    //     writer.Close();
 }
