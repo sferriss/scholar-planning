@@ -5,7 +5,7 @@ namespace Scholar.Planning.Api.Controllers;
 
 [ApiController]
 [Route("file")]
-public class FileController(ILogger<FileController> logger, IPdfGenerator pdfGenerator)
+public class FileController(IPdfGenerator pdfGenerator)
     : ControllerBase
 {
     [HttpGet]
