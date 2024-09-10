@@ -1,0 +1,6 @@
+@Scholar.Planning.Api_HostAddress = http://localhost:5226
+
+GET {{Scholar.Planning.Api_HostAddress}}/file/
+Accept: application/json
+
+###

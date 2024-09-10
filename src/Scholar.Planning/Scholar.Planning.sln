@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scholar.Planning.Api", "Scholar.Planning.Api\Scholar.Planning.Api.csproj", "{208FB33F-BFD8-4D5A-81D0-8C64AA4838A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scholar.Planning.Application", "Scholar.Planning.Application\Scholar.Planning.Application.csproj", "{3976DC82-E905-45E2-8325-D8325089A87F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scholar.Planning.Domain", "Scholar.Planning.Domain\Scholar.Planning.Domain.csproj", "{253305F8-DADB-43D6-B244-D6AACBA5E5EA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{208FB33F-BFD8-4D5A-81D0-8C64AA4838A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{208FB33F-BFD8-4D5A-81D0-8C64AA4838A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{208FB33F-BFD8-4D5A-81D0-8C64AA4838A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{208FB33F-BFD8-4D5A-81D0-8C64AA4838A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3976DC82-E905-45E2-8325-D8325089A87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3976DC82-E905-45E2-8325-D8325089A87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3976DC82-E905-45E2-8325-D8325089A87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3976DC82-E905-45E2-8325-D8325089A87F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{253305F8-DADB-43D6-B244-D6AACBA5E5EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{253305F8-DADB-43D6-B244-D6AACBA5E5EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{253305F8-DADB-43D6-B244-D6AACBA5E5EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{253305F8-DADB-43D6-B244-D6AACBA5E5EA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
